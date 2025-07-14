@@ -10,20 +10,20 @@ const IncentivesApp = () => {
     employeeId: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
       // Save data to Supabase
-      const { error } = await supabase
-        .from('incentive_registrations')
-        .insert({
-          name: formData.name,
-          employee_id: formData.employeeId
-        });
-
+      const {
+        error
+      } = await supabase.from('incentive_registrations').insert({
+        name: formData.name,
+        employee_id: formData.employeeId
+      });
       if (error) throw error;
 
       // Show success message
@@ -97,11 +97,7 @@ const IncentivesApp = () => {
 
               {/* Submit Button */}
               <div className="text-center pt-4">
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="btn-primary inline-flex items-center gap-2 min-w-[200px] justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <button type="submit" disabled={isSubmitting} className="btn-primary inline-flex items-center gap-2 min-w-[200px] justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "جاري الإرسال..." : "إرسال"}
                 </button>
@@ -125,7 +121,7 @@ const IncentivesApp = () => {
           {/* Dashboard Link */}
           <div className="mt-6 text-center">
             <a href="/dashboard" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
-              <span className="text-sm">يرجى التأكد من صحة البيانات المدخلة للحصول على الحوافز الفورية. </span>
+              
             </a>
           </div>
         </div>
