@@ -1,9 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-footer-bg text-white py-12 mt-16">
+  return <footer className="bg-footer-bg text-white py-12 mt-16">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Company Info */}
@@ -23,7 +21,7 @@ const Footer = () => {
             </h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-center md:justify-end gap-2">
-                <span>جدة - شارع الأمير فيصل - 6892 - عمارة 4214 - 23324 - الطابق الثاني - مكتب رقم 207</span>
+                <span>جدة - مركز الورود التجاري 6892 - ص.ب 4214 , 23224 - الدور الثاني - مكتب رقم</span>
                 <MapPin className="w-4 h-4 text-arabic-gold flex-shrink-0" />
               </div>
               <div className="flex items-center justify-center md:justify-end gap-2">
@@ -62,8 +60,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
