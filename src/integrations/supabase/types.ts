@@ -65,6 +65,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_visits: {
+        Row: {
+          created_at: string
+          id: string
+          page_url: string | null
+          user_agent: string | null
+          visitor_ip: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_url?: string | null
+          user_agent?: string | null
+          visitor_ip?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_url?: string | null
+          user_agent?: string | null
+          visitor_ip?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

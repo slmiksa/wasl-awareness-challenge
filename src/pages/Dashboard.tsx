@@ -33,8 +33,14 @@ interface IncentiveEntry {
   created_at: string;
 }
 
+interface SiteVisit {
+  id: string;
+  created_at: string;
+}
+
 const Dashboard = () => {
   const [data, setData] = useState<IncentiveEntry[]>([]);
+  const [visits, setVisits] = useState<SiteVisit[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,6 +48,7 @@ const Dashboard = () => {
   useEffect(() => {
     checkAuth();
     fetchData();
+    fetchVisits();
   }, []);
 
   const checkAuth = async () => {
@@ -70,6 +77,20 @@ const Dashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchVisits = async () => {
+    try {
+      const { data: siteVisits, error } = await supabase
+        .from('site_visits')
+        .select('id, created_at')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setVisits(siteVisits || []);
+    } catch (error) {
+      console.error('Error fetching visits:', error);
     }
   };
 
@@ -190,7 +211,7 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">إجمالي الطلبات</CardTitle>
@@ -210,6 +231,15 @@ const Dashboard = () => {
                     new Date(item.created_at).toDateString() === new Date().toDateString()
                   ).length}
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">إجمالي الزوار</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{visits.length}</div>
               </CardContent>
             </Card>
 
