@@ -111,10 +111,7 @@ const IncentivesApp = () => {
               <h3 className="text-lg font-semibold text-primary mb-3">
                 معلومات مهمة
               </h3>
-              <p className="arabic-text text-sm">
-                يرجى التأكد من صحة البيانات المدخلة للحصول على الحوافز الفورية.
-                سيتم التواصل معكم خلال 24 ساعة من تاريخ التسجيل.
-              </p>
+              <p className="arabic-text text-sm">يرجى التأكد من صحة البيانات المدخلة للحصول على الحوافز الفورية. </p>
             </div>
           </div>
 

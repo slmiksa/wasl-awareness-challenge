@@ -9,19 +9,17 @@ const Footer = () => {
             <h3 className="text-xl font-semibold mb-4 text-arabic-gold">
               شركة الوصل الوطنية
             </h3>
-            <p className="text-sm leading-relaxed mb-4">
-              للتحصيل ديون جهات التمويل
-            </p>
+            <p className="text-sm leading-relaxed mb-4">لتحصيل ديون جهات التمويل</p>
           </div>
 
           {/* Contact Information */}
           <div className="text-center md:text-right">
-            <h4 className="text-lg font-semibold mb-4 text-arabic-gold">
-              معلومات عن التواصل
-            </h4>
+            <h4 className="text-lg font-semibold mb-4 text-arabic-gold">معلومات التواصل</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-center md:justify-end gap-2">
-                <span>جدة - مركز الورود التجاري 6892 - ص.ب 4214 , 23224 - الدور الثاني - مكتب رقم</span>
+                <span>
+
+جدة - مركز الورود التجاري 6892 - ص.ب 4214 , 23224 - الدور الثاني - مكتب رقم 207</span>
                 <MapPin className="w-4 h-4 text-arabic-gold flex-shrink-0" />
               </div>
               <div className="flex items-center justify-center md:justify-end gap-2">
