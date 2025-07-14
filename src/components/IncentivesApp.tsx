@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import Logo from './Logo';
 import Footer from './Footer';
 import { Send } from 'lucide-react';
@@ -8,34 +9,44 @@ const IncentivesApp = () => {
     name: '',
     employeeId: ''
   });
-  const {
-    toast
-  } = useToast();
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Save data to localStorage
-    const existingData = JSON.parse(localStorage.getItem('incentivesData') || '[]');
-    const newEntry = {
-      id: Date.now(),
-      name: formData.name,
-      employeeId: formData.employeeId,
-      timestamp: new Date().toISOString()
-    };
-    existingData.push(newEntry);
-    localStorage.setItem('incentivesData', JSON.stringify(existingData));
+    try {
+      // Save data to Supabase
+      const { error } = await supabase
+        .from('incentive_registrations')
+        .insert({
+          name: formData.name,
+          employee_id: formData.employeeId
+        });
 
-    // Show success message
-    toast({
-      title: "تم الإرسال بنجاح",
-      description: "تم تسجيل طلبك للحصول على الحوافز الفورية"
-    });
+      if (error) throw error;
 
-    // Reset form
-    setFormData({
-      name: '',
-      employeeId: ''
-    });
+      // Show success message
+      toast({
+        title: "تم الإرسال بنجاح",
+        description: "تم تسجيل طلبك للحصول على الحوافز الفورية"
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        employeeId: ''
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ أثناء تسجيل البيانات، يرجى المحاولة مرة أخرى",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -86,9 +97,13 @@ const IncentivesApp = () => {
 
               {/* Submit Button */}
               <div className="text-center pt-4">
-                <button type="submit" className="btn-primary inline-flex items-center gap-2 min-w-[200px] justify-center">
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="btn-primary inline-flex items-center gap-2 min-w-[200px] justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <Send className="w-4 h-4" />
-                  إرسال
+                  {isSubmitting ? "جاري الإرسال..." : "إرسال"}
                 </button>
               </div>
             </form>
