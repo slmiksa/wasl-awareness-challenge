@@ -33,17 +33,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background dotted-bg">
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Logo and Dashboard Button */}
-        <div className="flex justify-between items-center mb-8">
+        {/* Header with Logo */}
+        <div className="flex justify-center items-center mb-8">
           <Logo />
-          <Button 
-            onClick={() => navigate('/auth')}
-            variant="outline"
-            className="arabic-text flex items-center gap-2"
-          >
-            <Settings className="w-4 h-4" />
-            لوحة التحكم
-          </Button>
         </div>
 
         {/* Main Incentives App */}

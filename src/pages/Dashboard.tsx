@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Download, FileText, FileSpreadsheet, ArrowLeft } from 'lucide-react';
+import { Download, FileText, FileSpreadsheet, ArrowLeft, Users } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
@@ -24,11 +25,48 @@ interface IncentiveEntry {
 }
 const Dashboard = () => {
   const [data, setData] = useState<IncentiveEntry[]>([]);
+  const [visitorCount, setVisitorCount] = useState(0);
   const navigate = useNavigate();
+
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('incentivesData') || '[]');
-    setData(storedData);
+    fetchData();
+    fetchVisitorCount();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const { data: registrations, error } = await supabase
+        .from('incentive_registrations')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedData = registrations?.map((reg, index) => ({
+        id: index + 1,
+        name: reg.name,
+        employeeId: reg.employee_id,
+        timestamp: reg.created_at
+      })) || [];
+
+      setData(formattedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchVisitorCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('site_visits')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setVisitorCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching visitor count:', error);
+    }
+  };
   const exportToPDF = () => {
     const doc = new jsPDF({
       orientation: 'landscape',
@@ -104,7 +142,7 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">إجمالي الطلبات</CardTitle>
@@ -122,6 +160,16 @@ const Dashboard = () => {
                 <div className="text-2xl font-bold text-primary">
                   {data.filter(item => new Date(item.timestamp).toDateString() === new Date().toDateString()).length}
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">عدد الزوار</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{visitorCount}</div>
               </CardContent>
             </Card>
 

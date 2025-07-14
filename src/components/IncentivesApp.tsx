@@ -131,8 +131,6 @@ const IncentivesApp = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer />
     </div>;
 };
 export default IncentivesApp;
