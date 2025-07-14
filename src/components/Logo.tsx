@@ -1,6 +1,6 @@
 import React from 'react';
 const Logo = () => {
-  return <div className="text-center mb-8">
+  return <div className="text-center mb-8 mx-[21px] my-0 py-[9px] px-[3px] rounded-none">
       <div className="inline-flex items-center justify-center mb-4">
         <img src="/lovable-uploads/44de7855-ea79-4993-a667-3ba40ccba1d3.png" alt="شركة الوصل الوطنية" className="w-32 h-32 object-scale-down" />
       </div>
