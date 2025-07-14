@@ -14,7 +14,18 @@ const IncentivesApp = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulate form submission
+    // Save data to localStorage
+    const existingData = JSON.parse(localStorage.getItem('incentivesData') || '[]');
+    const newEntry = {
+      id: Date.now(),
+      name: formData.name,
+      employeeId: formData.employeeId,
+      timestamp: new Date().toISOString()
+    };
+    existingData.push(newEntry);
+    localStorage.setItem('incentivesData', JSON.stringify(existingData));
+    
+    // Show success message
     toast({
       title: "تم الإرسال بنجاح",
       description: "تم تسجيل طلبك للحصول على الحوافز الفورية"
@@ -80,7 +91,7 @@ const IncentivesApp = () => {
                   الرقم الوظيفي :
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="employeeId"
                   name="employeeId"
                   value={formData.employeeId}
@@ -115,6 +126,16 @@ const IncentivesApp = () => {
                 سيتم التواصل معكم خلال 24 ساعة من تاريخ التسجيل.
               </p>
             </div>
+          </div>
+
+          {/* Dashboard Link */}
+          <div className="mt-6 text-center">
+            <a 
+              href="/dashboard" 
+              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+            >
+              <span className="text-sm">لوحة التحكم</span>
+            </a>
           </div>
         </div>
       </div>
