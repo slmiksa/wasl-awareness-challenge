@@ -43,20 +43,7 @@ const Footer = () => {
         </div>
 
         {/* Social Media */}
-        <div className="flex justify-center gap-4 mt-8 pt-8 border-t border-gray-600">
-          <div className="w-8 h-8 bg-arabic-gold rounded flex items-center justify-center">
-            <span className="text-white text-sm font-bold">in</span>
-          </div>
-          <div className="w-8 h-8 bg-arabic-gold rounded flex items-center justify-center">
-            <span className="text-white text-sm font-bold">ig</span>
-          </div>
-          <div className="w-8 h-8 bg-arabic-gold rounded flex items-center justify-center">
-            <span className="text-white text-sm font-bold">tw</span>
-          </div>
-          <div className="w-8 h-8 bg-arabic-gold rounded flex items-center justify-center">
-            <span className="text-white text-sm font-bold">fb</span>
-          </div>
-        </div>
+        
       </div>
     </footer>;
 };
