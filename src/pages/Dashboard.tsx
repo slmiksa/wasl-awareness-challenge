@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Download, FileText, FileSpreadsheet, ArrowLeft } from 'lucide-react';
+import { Download, FileText, FileSpreadsheet, ArrowLeft, LogOut } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
@@ -25,20 +27,64 @@ declare module 'jspdf' {
 }
 
 interface IncentiveEntry {
-  id: number;
+  id: string;
   name: string;
-  employeeId: string;
-  timestamp: string;
+  employee_id: string;
+  created_at: string;
 }
 
 const Dashboard = () => {
   const [data, setData] = useState<IncentiveEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('incentivesData') || '[]');
-    setData(storedData);
+    checkAuth();
+    fetchData();
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate('/auth');
+      return;
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const { data: registrations, error } = await supabase
+        .from('incentive_registrations')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setData(registrations || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ في تحميل البيانات",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ في تسجيل الخروج",
+        variant: "destructive"
+      });
+    } else {
+      navigate('/');
+    }
+  };
 
   const exportToPDF = () => {
     const doc = new jsPDF({
@@ -59,8 +105,8 @@ const Dashboard = () => {
     const tableData = data.map((item, index) => [
       (index + 1).toString(),
       item.name,
-      item.employeeId,
-      new Date(item.timestamp).toLocaleDateString('ar-SA')
+      item.employee_id,
+      new Date(item.created_at).toLocaleDateString('ar-SA')
     ]);
 
     doc.autoTable({
@@ -91,9 +137,9 @@ const Dashboard = () => {
       data.map((item, index) => ({
         '#': index + 1,
         'الاسم': item.name,
-        'الرقم الوظيفي': item.employeeId,
-        'التاريخ': new Date(item.timestamp).toLocaleDateString('ar-SA'),
-        'الوقت': new Date(item.timestamp).toLocaleTimeString('ar-SA')
+        'الرقم الوظيفي': item.employee_id,
+        'التاريخ': new Date(item.created_at).toLocaleDateString('ar-SA'),
+        'الوقت': new Date(item.created_at).toLocaleTimeString('ar-SA')
       }))
     );
 
@@ -110,14 +156,25 @@ const Dashboard = () => {
           
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/')}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              العودة للرئيسية
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                العودة للرئيسية
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-destructive hover:text-destructive"
+              >
+                <LogOut className="w-4 h-4" />
+                تسجيل الخروج
+              </Button>
+            </div>
             
             <Logo />
           </div>
@@ -150,7 +207,7 @@ const Dashboard = () => {
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
                   {data.filter(item => 
-                    new Date(item.timestamp).toDateString() === new Date().toDateString()
+                    new Date(item.created_at).toDateString() === new Date().toDateString()
                   ).length}
                 </div>
               </CardContent>
@@ -163,7 +220,7 @@ const Dashboard = () => {
               <CardContent>
                 <div className="text-sm text-muted-foreground">
                   {data.length > 0 
-                    ? new Date(data[data.length - 1].timestamp).toLocaleString('ar-SA')
+                    ? new Date(data[0].created_at).toLocaleString('ar-SA')
                     : 'لا توجد بيانات'
                   }
                 </div>
@@ -198,7 +255,11 @@ const Dashboard = () => {
               <CardTitle className="text-right">بيانات المسجلين</CardTitle>
             </CardHeader>
             <CardContent>
-              {data.length === 0 ? (
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="arabic-text text-muted-foreground">جاري تحميل البيانات...</div>
+                </div>
+              ) : data.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   لا توجد بيانات مسجلة حتى الآن
                 </div>
@@ -219,12 +280,12 @@ const Dashboard = () => {
                         <TableRow key={item.id}>
                           <TableCell className="text-right">{index + 1}</TableCell>
                           <TableCell className="text-right font-medium">{item.name}</TableCell>
-                          <TableCell className="text-right">{item.employeeId}</TableCell>
+                          <TableCell className="text-right">{item.employee_id}</TableCell>
                           <TableCell className="text-right">
-                            {new Date(item.timestamp).toLocaleDateString('ar-SA')}
+                            {new Date(item.created_at).toLocaleDateString('ar-SA')}
                           </TableCell>
                           <TableCell className="text-right">
-                            {new Date(item.timestamp).toLocaleTimeString('ar-SA')}
+                            {new Date(item.created_at).toLocaleTimeString('ar-SA')}
                           </TableCell>
                         </TableRow>
                       ))}
