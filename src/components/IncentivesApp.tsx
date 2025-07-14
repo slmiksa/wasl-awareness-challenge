@@ -1,0 +1,128 @@
+import React, { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import Logo from './Logo';
+import Footer from './Footer';
+import { Send } from 'lucide-react';
+
+const IncentivesApp = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    employeeId: ''
+  });
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simulate form submission
+    toast({
+      title: "تم الإرسال بنجاح",
+      description: "تم تسجيل طلبك للحصول على الحوافز الفورية"
+    });
+
+    // Reset form
+    setFormData({ name: '', employeeId: '' });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-background dotted-bg">
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          
+          {/* Logo */}
+          <Logo />
+
+          {/* Main Title */}
+          <div className="text-center mb-12">
+            <h1 className="arabic-title mb-4">
+              حوافز الوصل الوطنية
+            </h1>
+            <h2 className="text-xl text-primary font-medium mb-2">
+              لتحصيل ديون جهات التمويل
+            </h2>
+            <p className="arabic-text text-muted-foreground">
+              للإطلاع والتسجيل في الحوافز الفورية
+            </p>
+          </div>
+
+          {/* Registration Form */}
+          <div className="bg-card rounded-lg shadow-lg p-8 border border-border">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              
+              {/* Name Field */}
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2 text-right">
+                  الاسم :
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="form-field w-full text-right"
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
+
+              {/* Employee ID Field */}
+              <div>
+                <label htmlFor="employeeId" className="block text-sm font-medium text-foreground mb-2 text-right">
+                  الرقم الوظيفي :
+                </label>
+                <input
+                  type="text"
+                  id="employeeId"
+                  name="employeeId"
+                  value={formData.employeeId}
+                  onChange={handleInputChange}
+                  required
+                  className="form-field w-full text-right"
+                  placeholder="أدخل رقمك الوظيفي"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="text-center pt-4">
+                <button
+                  type="submit"
+                  className="btn-primary inline-flex items-center gap-2 min-w-[200px] justify-center"
+                >
+                  <Send className="w-4 h-4" />
+                  إرسال
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Additional Information */}
+          <div className="mt-8 text-center">
+            <div className="bg-arabic-beige rounded-lg p-6 border border-primary/20">
+              <h3 className="text-lg font-semibold text-primary mb-3">
+                معلومات مهمة
+              </h3>
+              <p className="arabic-text text-sm">
+                يرجى التأكد من صحة البيانات المدخلة للحصول على الحوافز الفورية.
+                سيتم التواصل معكم خلال 24 ساعة من تاريخ التسجيل.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
+
+export default IncentivesApp;

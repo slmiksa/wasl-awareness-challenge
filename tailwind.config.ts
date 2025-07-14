@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					hover: 'hsl(var(--primary-hover))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -61,7 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Arabic brand colors
+				'arabic-gold': 'hsl(var(--arabic-gold))',
+				'arabic-beige': 'hsl(var(--arabic-beige))',
+				'arabic-brown': 'hsl(var(--arabic-brown))',
+				'footer-bg': 'hsl(var(--footer-bg))'
+			},
+			fontFamily: {
+				'arabic': ['Cairo', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
