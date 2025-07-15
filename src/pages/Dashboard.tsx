@@ -57,12 +57,12 @@ const Dashboard = () => {
 
   const fetchVisitorCount = async () => {
     try {
-      const { count, error } = await supabase
+      const { data, error } = await supabase
         .from('site_visits')
-        .select('*', { count: 'exact', head: true });
+        .select('id');
 
       if (error) throw error;
-      setVisitorCount(count || 0);
+      setVisitorCount(data?.length || 0);
     } catch (error) {
       console.error('Error fetching visitor count:', error);
     }
