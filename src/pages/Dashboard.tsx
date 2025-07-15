@@ -18,7 +18,7 @@ declare module 'jspdf' {
   }
 }
 interface IncentiveEntry {
-  id: number;
+  id: string;
   name: string;
   employeeId: string;
   timestamp: string;
@@ -42,8 +42,8 @@ const Dashboard = () => {
 
       if (error) throw error;
 
-      const formattedData = registrations?.map((reg, index) => ({
-        id: index + 1,
+      const formattedData = registrations?.map((reg) => ({
+        id: reg.id,
         name: reg.name,
         employeeId: reg.employee_id,
         timestamp: reg.created_at
