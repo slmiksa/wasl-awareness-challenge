@@ -83,7 +83,7 @@ const Dashboard = () => {
     doc.text('تقرير تسجيل الحوافز', 20, 30);
 
     // Table data
-    const tableData = data.map((item, index) => [(index + 1).toString(), item.name, item.employeeId, new Date(item.timestamp).toLocaleDateString('ar-SA')]);
+    const tableData = data.map((item, index) => [(index + 1).toString(), item.name, item.employeeId, new Date(item.timestamp).toLocaleDateString('en-GB')]);
     doc.autoTable({
       head: [['#', 'الاسم / Name', 'الرقم الوظيفي / Employee ID', 'التاريخ / Date']],
       body: tableData,
@@ -110,8 +110,8 @@ const Dashboard = () => {
       '#': index + 1,
       'الاسم': item.name,
       'الرقم الوظيفي': item.employeeId,
-      'التاريخ': new Date(item.timestamp).toLocaleDateString('ar-SA'),
-      'الوقت': new Date(item.timestamp).toLocaleTimeString('ar-SA')
+      'التاريخ': new Date(item.timestamp).toLocaleDateString('en-GB'),
+      'الوقت': new Date(item.timestamp).toLocaleTimeString('en-GB')
     })));
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'تقرير الحوافز');
@@ -179,7 +179,7 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-muted-foreground">
-                  {data.length > 0 ? new Date(data[data.length - 1].timestamp).toLocaleString('ar-SA') : 'لا توجد بيانات'}
+                  {data.length > 0 ? new Date(data[0].timestamp).toLocaleString('en-GB') : 'لا توجد بيانات'}
                 </div>
               </CardContent>
             </Card>
@@ -223,10 +223,10 @@ const Dashboard = () => {
                           <TableCell className="text-right font-medium">{item.name}</TableCell>
                           <TableCell className="text-right">{item.employeeId}</TableCell>
                           <TableCell className="text-right">
-                            {new Date(item.timestamp).toLocaleDateString('ar-SA')}
+                            {new Date(item.timestamp).toLocaleDateString('en-GB')}
                           </TableCell>
                           <TableCell className="text-right">
-                            {new Date(item.timestamp).toLocaleTimeString('ar-SA')}
+                            {new Date(item.timestamp).toLocaleTimeString('en-GB')}
                           </TableCell>
                         </TableRow>)}
                     </TableBody>
